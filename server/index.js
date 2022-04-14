@@ -16,7 +16,7 @@ process.on('uncaughtException', (err) => {
 
 const DB =
   process.env.NODE_ENV == 'development'
-    ? process.env.MONGODB_LOCAL
+    ? process.env.MONGODB_URL
     : process.env.MONGODB_URL
 
 mongoose
