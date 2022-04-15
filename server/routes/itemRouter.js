@@ -2,7 +2,7 @@ const express = require('express')
 const multer = require('multer')
 const { protectRoute } = require('../controllers/auth.controller')
 
-const { createItem } = require('../controllers/item.controller')
+const { createItem, deleteItem } = require('../controllers/item.controller')
 const Item = require('../models/item/itemModel')
 
 const router = express.Router()
@@ -26,19 +26,21 @@ router.use(protectRoute)
 // const upload = multer({ storage: multerStorage, fileFilter: multerFilter })
 // upload.single('image')
 
-router.post('/', createItem)
+router
+  .route('/')
+  .post(createItem)
+  .delete(deleteItem)
+  .get(async (req, res) => {
+    const page = Number(req.query?.page) || 1
+    const limit = Number(req.query?.limit) || 50
+    const skip = (page - 1) * limit
 
-router.get('/', async (req, res) => {
-  const page = Number(req.query?.page) || 1
-  const limit = Number(req.query?.limit) || 50
-  const skip = (page - 1) * limit
-
-  const allItems = await Item.find({ user: req.user.id })
-    .limit(limit)
-    .skip(skip)
-    .populate('category')
-  console.log(allItems)
-  res.json({ items: allItems })
-})
+    const allItems = await Item.find({ user: req.user.id })
+      .limit(limit)
+      .skip(skip)
+      .populate('category')
+    console.log(allItems)
+    res.json({ items: allItems })
+  })
 
 module.exports = router

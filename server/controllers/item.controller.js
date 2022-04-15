@@ -6,6 +6,11 @@ const Item = require('./../models/item/itemModel')
 //   res.json({ data: { items } })
 // }
 
+exports.deleteItem = async (req, res) => {
+  await Item.findByIdAndRemove(req.params.item)
+  res.status(204).json()
+}
+
 exports.createItem = async (req, res) => {
   const oneItem = await Item.create({ ...req.body, user: req.user.id })
   // if (req.file) {

@@ -7,5 +7,3 @@ dist-ssr
 server/node_modules
 client/node_modules
 deploy.sh
-
-static
