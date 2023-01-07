@@ -1,11 +1,18 @@
 const sharp = require('sharp')
 const Item = require('./../models/item/itemModel')
 
-// exports.getAllItems = async (req, res) => {
-//   const items = await Item.find({}).populate('category')
-//   res.json({ data: { items } })
-// }
+exports.getAllItems = async (req, res) => {
+  const page = Number(req.query?.page) || 1
+  const limit = Number(req.query?.limit) || 50
+  const skip = (page - 1) * limit
 
+  const allItems = await Item.find({ user: req.user.id })
+    .limit(limit)
+    .skip(skip)
+    .populate('category')
+  console.log(allItems)
+  res.json({ items: allItems })
+}
 exports.deleteItem = async (req, res) => {
   await Item.findByIdAndRemove(req.params.item)
   res.status(204).json()
